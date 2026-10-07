@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -27,13 +27,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build React app
+        working-directory: frontend
+        run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload frontend
+      - name: Upload built website
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./frontend
+          path: frontend/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
