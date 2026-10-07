@@ -1,0 +1,5 @@
+Flask==3.1.0
+Flask-Cors==5.0.0
+numpy==2.2.0
+scipy==1.15.0
+scikit-fuzzy==0.5.0
